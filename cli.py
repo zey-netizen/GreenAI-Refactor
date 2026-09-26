@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """GreenAI-Refactor CLI.
 
-Contoh:
+Examples:
     python cli.py scan ./my-project
     python cli.py scan . --format json --out reports/scan.json
 """
@@ -17,22 +17,22 @@ from src import report
 def main():
     parser = argparse.ArgumentParser(
         prog="greenai",
-        description="Deteksi panggilan AI API yang bisa diganti kode biasa.",
+        description="Detect AI API calls that could be replaced with plain code.",
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    p_scan = sub.add_parser("scan", help="Scan folder project")
-    p_scan.add_argument("path", help="Path folder yang akan discan")
+    p_scan = sub.add_parser("scan", help="Scan a project directory")
+    p_scan.add_argument("path", help="Path to the directory to scan")
     p_scan.add_argument("--format", choices=["console", "json"],
-                        default="console", help="Format output")
-    p_scan.add_argument("--out", help="Simpan hasil ke file (opsional)")
+                        default="console", help="Output format")
+    p_scan.add_argument("--out", help="Save output to a file (optional)")
 
     args = parser.parse_args()
 
     if args.cmd == "scan":
         path = Path(args.path).resolve()
         if not path.exists():
-            print(f"❌ Path tidak ditemukan: {path}", file=sys.stderr)
+            print(f"Error: path not found: {path}", file=sys.stderr)
             sys.exit(1)
 
         result = scan_directory(str(path))

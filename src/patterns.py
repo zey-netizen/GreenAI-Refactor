@@ -95,6 +95,9 @@ def find_ai_calls(source: str):
     """Return a list of (line_no, snippet, provider) for every AI call."""
     hits = []
     for i, line in enumerate(source.splitlines(), start=1):
+        # Skip SDK setup / configuration lines
+        if any(re.search(p, line) for p in SETUP_PATTERNS):
+            continue
         for pattern, provider in AI_CALL_PATTERNS:
             if re.search(pattern, line):
                 hits.append((i, line.strip(), provider))

@@ -1,4 +1,4 @@
-"""Formatter output: console berwarna + json."""
+"""Output formatters: colored console output + JSON."""
 
 import json
 from .detector import ScanResult
@@ -14,32 +14,32 @@ except ImportError:
 
 def print_console(result: ScanResult):
     if not result.findings:
-        print(f"{C['green']}✅ Tidak ada panggilan AI yang terdeteksi. Bersih!")
+        print(f"{C['green']}OK - No AI calls detected. Clean!")
         return
 
-    print(f"\n{C['bold']}🌱 GreenAI-Refactor — Hasil Scan{C['reset']}\n")
+    print(f"\n{C['bold']}GreenAI-Refactor - Scan Results{C['reset']}\n")
     current_file = None
     for f in result.findings:
         if f.file != current_file:
             current_file = f.file
-            print(f"\n{C['bold']}📄 {f.file}{C['reset']}")
+            print(f"\n{C['bold']}{f.file}{C['reset']}")
         if f.replaceable:
-            print(f"  {C['yellow']}⚠️  Line {f.line}  [{f.provider}]{C['reset']}"
-                  f"  ← bisa diganti kode biasa")
-            print(f"      Kategori : {C['cyan']}{f.kategori}{C['reset']}")
-            print(f"      Saran    : {C['green']}{f.saran}{C['reset']}")
+            print(f"  {C['yellow']}[!] Line {f.line}  [{f.provider}]{C['reset']}"
+                  f"  <- replaceable with plain code")
+            print(f"      Category   : {C['cyan']}{f.category}{C['reset']}")
+            print(f"      Suggestion : {C['green']}{f.suggestion}{C['reset']}")
         else:
-            print(f"  {C['red']}●  Line {f.line}  [{f.provider}]{C['reset']}"
-                  f"  (perlu review manual)")
+            print(f"  {C['red']}[ ] Line {f.line}  [{f.provider}]{C['reset']}"
+                  f"  (manual review needed)")
 
-    print(f"\n{C['bold']}Ringkasan:{C['reset']}")
-    print(f"  Total file backend discan : {result.total_files}")
-    print(f"  File berisi AI call       : {result.scanned_files}")
-    print(f"  Total AI call             : {len(result.findings)}")
-    print(f"  {C['green']}Bisa diganti kode biasa  : {result.replaceable_count}{C['reset']}")
+    print(f"\n{C['bold']}Summary:{C['reset']}")
+    print(f"  Total backend files scanned : {result.total_files}")
+    print(f"  Files with AI calls         : {result.scanned_files}")
+    print(f"  Total AI calls              : {len(result.findings)}")
+    print(f"  {C['green']}Replaceable with plain code : {result.replaceable_count}{C['reset']}")
     if result.findings:
         pct = 100 * result.replaceable_count / len(result.findings)
-        print(f"  {C['green']}Potensi hemat             : {pct:.1f}% panggilan AI{C['reset']}")
+        print(f"  {C['green']}Potential savings           : {pct:.1f}% of AI calls{C['reset']}")
 
 
 def to_json(result: ScanResult) -> str:
@@ -54,8 +54,8 @@ def to_json(result: ScanResult) -> str:
             "findings": [
                 {
                     "file": f.file, "line": f.line, "provider": f.provider,
-                    "snippet": f.snippet, "kategori": f.kategori,
-                    "saran": f.saran, "replaceable": f.replaceable,
+                    "snippet": f.snippet, "category": f.category,
+                    "suggestion": f.suggestion, "replaceable": f.replaceable,
                 }
                 for f in result.findings
             ],

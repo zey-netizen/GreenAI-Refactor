@@ -4,6 +4,21 @@ that could be replaced with plain deterministic code."""
 import re
 
 # -----------------------------------------------------------------
+# 0. Setup patterns — these are SDK configuration lines,
+#    NOT actual AI calls. Skip them.
+# -----------------------------------------------------------------
+SETUP_PATTERNS = [
+    r"genai\.configure\s*\(",
+    r"GenerativeModel\s*\(",
+    r"openai\.api_key\s*=",
+    r"client\s*=\s*OpenAI\s*\(",
+    r"client\s*=\s*Anthropic\s*\(",
+    r"anthropic\.api_key\s*=",
+    r"cohere\.Client\s*\(",
+    r"model\s*=\s*genai\.",
+]
+
+# -----------------------------------------------------------------
 # 1. Detection patterns for AI provider SDKs / HTTP calls
 # -----------------------------------------------------------------
 AI_CALL_PATTERNS = [

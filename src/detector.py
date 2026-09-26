@@ -38,7 +38,7 @@ class ScanResult:
 STRING_LITERAL = re.compile(r"""(['"])(?:\\.|(?!\1).){15,}\1""")
 
 
-def _extract_prompts_near(lines: List[str], center: int, window: int = 6) -> str:
+def _extract_prompts_near(lines: List[str], center: int, window: int = 3) -> str:
     """Collect string literals within `window` lines of `center`."""
     start = max(0, center - window)
     end = min(len(lines), center + window + 1)
